@@ -167,6 +167,8 @@ public class depthViewer : MonoBehaviour
                 jointObj.transform.localScale = new Vector3(psize, psize, psize);  //make it a really tiny shphere
                 Renderer renderer = jointObj.GetComponent<Renderer>();
                 renderer.material.shader = myShader;
+
+                Destroy(jointObj.GetComponent<BoxCollider>());
             }
 
                 //Vector3 test = normals[i];
