@@ -566,8 +566,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   psize: 0.01
   restart: 0
-  play: 0
-  loop: 0
+  play: 1
+  loop: 1
   elapsedTime: 0
   fileName: 
   currentFrame: 0
