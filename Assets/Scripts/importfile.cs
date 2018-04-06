@@ -3,42 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-using Assets.scripts;
 
-public class importfile {
+public static class importfile
+{
 
-    public Boolean ready = false;
-    private int numFrames;  //counts the number of frames minus the param frame
-    private device Camera;
-    private string fileName;
-    private CloudFrame[] cloudFrames;
-
-    public importfile(string _fileName)
+    public static device openPicture(string FileName)
     {
-        this.fileName = _fileName;
-        openPicture(this.fileName);
-    }
+        //string _Filename = Application.persistentDataPath + "/" + FileName;
+        string _Filename = "myMovie2.pcm";
+        //string _Filename = "2018-03-22T01_45_52.763+0000.pcm";
+        //string _Filename = "2018-03-02T02_45_35.849+0000.pcm";
 
-    public int getNumFrames()
-    {
-        return numFrames;
-    }
-
-    public CloudFrame[] getCloudFrames()
-    {
-        return cloudFrames;
-    }
-
-    public device getCamera()
-    {
-        return Camera;
-    }
-
-    public void openPicture(string FileName)
-    {
-        if (File.Exists(FileName))
+        if (File.Exists(_Filename))
         {
-            using (StreamReader sr = new StreamReader(FileName))
+            using (StreamReader sr = new StreamReader(new FileStream(_Filename, FileMode.Open)))
             {
                 string test = "";
                 try
@@ -46,23 +24,26 @@ public class importfile {
                     string picture = sr.ReadToEnd();
                     char delimiter = '\n';
                     string[] frames = picture.Split(delimiter);
-                    numFrames = chk(frames) - 1; //the first frame is always just the camera params
+                    int numFrames = chk(frames); 
 
-                    if(numFrames < 1)  ////make sure numFrames is not 0
+                    if (numFrames < 1)  ////make sure numFrames is not 0
                         throw new Exception("No Data in File...");
 
-                    cloudFrames = new CloudFrame[numFrames];
-                    delimiter = ' ';
-                    string[] deviceParams = frames[0].Split(delimiter);
-                    Camera = new device(int.Parse(deviceParams[0]), int.Parse(deviceParams[1]), int.Parse(deviceParams[2]));
+                    CloudFrame[] cloudFrames = new CloudFrame[numFrames];
+                    //delimiter = ' ';
+                    //string[] deviceParams = frames[0].Split(delimiter);
 
                     //cycle through frames  -- REMEMBER THE FIRST FRAME IS JUST CAMERA PARAMS
-                    for (int j = 1; j<=numFrames; j++) //j indexes the frames array
+                    for (int j = 0; j < numFrames; j++) //j indexes the frames array
                     {
                         test = frames[j];
-              
-                        cloudFrames[j - 1] = JsonUtility.FromJson<CloudFrame>(test);
+
+                        cloudFrames[j] = JsonUtility.FromJson<CloudFrame>(test);
+                        //cloudFrames[j-1] = parseJSONofJSON(test, cloudFrames[j - 1]);
                     }
+                    device attachedCamera = new device();
+                    attachedCamera.cloudFrames = cloudFrames;
+                    return attachedCamera;
                 }
                 catch (Exception e)
                 {
@@ -73,15 +54,43 @@ public class importfile {
         }
         else
         {
-            Exception e = new Exception();
-            throw e;
+            throw new Exception("File Not Found");
         }
     }
 
-    private int chk(string[] _frames)
+    /*
+    private static CloudFrame parseJSONofJSON(string JSONstr, CloudFrame aframe)
+    {  //only deals with the frame at the index given by the index
+        char[] delimiter = new char[2];
+        delimiter[0] = '[';
+        delimiter[1] = ']';
+        string[] pieces = JSONstr.Split(delimiter);
+
+        string[] str_parsed = pieces[1].Split('}');
+        string[] SVs = new string[str_parsed.Length - 1];
+        for(int i = 0; i < str_parsed.Length-1; i++)
+        {
+            if (str_parsed[i].StartsWith(","))
+            {
+                str_parsed[i] = str_parsed[i].Remove(0, 1);
+            }
+            SVs[i] = str_parsed[i] + "}";
+        }
+
+        SimpleVector test;
+        for(int i = 0; i<SVs.Length; i++)
+        {
+            test = JsonUtility.FromJson<SimpleVector>(SVs[i]);
+        }
+
+        return aframe;
+    }
+    */
+
+    private static int chk(string[] _frames)
     {
         int chkFrames = 0;
-        foreach(string test in _frames)
+        foreach (string test in _frames)
         {
             if (test.ToCharArray().Length != 0)
                 chkFrames++;
