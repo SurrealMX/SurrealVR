@@ -158,6 +158,36 @@ public class CloudFrame
         return new CloudFrame(normPs, t, _height, _width);
     }
 
+    public Vector3[] getNormals(Vector3[] pointCloud)
+    {
+        int height = this.height;
+        int width = this.width;
+
+        Vector3[] Normals = new Vector3[pointCloud.Length];
+
+        for (int i = 0; i < pointCloud.Length; i++)
+        {
+            if((i < pointCloud.Length-width-1) && (i % (width-1) != 0))
+            {
+                int right = i + 1;
+                int down = width + i + 1;
+                Vector3 b = pointCloud[right];
+                Vector3 a = pointCloud[i];
+                Vector3 c = pointCloud[down];
+
+                Plane tempPlane = new Plane();
+                tempPlane.Set3Points(a, b, c);
+                Normals[i] = tempPlane.normal;
+
+            } else
+            {
+                Normals[i] = Vector3.zero;
+            }
+        }
+
+        return Normals;
+    }
+
     private void debug(float[] points)
     {
         float max = 0;

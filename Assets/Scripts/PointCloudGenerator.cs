@@ -54,7 +54,12 @@ namespace PointCloudExporter
 		
 		void Update ()
 		{
-            transform.Rotate(Vector3.right, 10.0f * Time.deltaTime);
+
+            //transform.Rotate(Vector3.right, 10.0f * Time.deltaTime);
+
+            //if (displaceFiredAt + time > Time.time) {
+            //	Displace(Time.deltaTime);
+            //}
         }
 
 		public CloudFrame LoadPointCloud ()
@@ -69,14 +74,14 @@ namespace PointCloudExporter
 		public void Generate ()
 		{
 			CloudFrame frame = LoadPointCloud();
-            CloudFrame lowResFrame = frame.getLowResCloudFrame(65000);
+            //CloudFrame lowResFrame = frame.getLowResCloudFrame(65000);
 
             //Vector3[] points = frame.GetpointCloud();
             //Color[] colors = frame.GetColorCloud();
 
             //Generate(points, colors);
 			material = new Material(shader);
-            Generate(lowResFrame, material, MeshTopology.Points);
+            Generate(frame, material, MeshTopology.Points);
             //Generate(lowResFrame.GetpointCloud(0.001f), lowResFrame.GetColorCloud());
 		}
 
@@ -140,6 +145,7 @@ namespace PointCloudExporter
 				
                 Vector3[] subVertices = frame.GetpointCloud(0.01f).Skip(meshIndex * verticesMax).Take(count).ToArray();
                 Color[] subColors = frame.GetColorCloud().Skip(meshIndex * verticesMax).Take(count).ToArray();
+                Vector3[] subNormals = frame.getNormals(frame.GetpointCloud(0.01f)).Skip(meshIndex * verticesMax).Take(count).ToArray();
                 //Vector3[] subVertices = meshInfos.vertices.Skip(meshIndex * verticesMax).Take(count).ToArray();
 				//Vector3[] subNormals = meshInfos.normals.Skip(meshIndex * verticesMax).Take(count).ToArray();
 				//Color[] subColors = meshInfos.colors.Skip(meshIndex * verticesMax).Take(count).ToArray();
@@ -151,7 +157,7 @@ namespace PointCloudExporter
 				Mesh mesh = new Mesh();
 				mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 100f);
 				mesh.vertices = subVertices;
-				//mesh.normals = subNormals;
+				mesh.normals = subNormals;
 				mesh.colors = subColors;
 				mesh.SetIndices(subIndices, topology, 0);
 
