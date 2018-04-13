@@ -8,9 +8,6 @@ namespace PointCloudExporter
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 	public class PointCloudGenerator : MonoBehaviour
 	{
-		[Header("Point Cloud")]
-		public string fileName = "Simon2";
-		public int maximumVertices = 60000;
 
         [Header("Renderer")]
         public float size = 1;
@@ -64,11 +61,9 @@ namespace PointCloudExporter
 
 		public CloudFrame LoadPointCloud ()
 		{
-            string filePath = "testc.pcm"; //System.IO.Path.Combine(Application.streamingAssetsPath, fileName) + ".ply";
 
             return importfile.openPicture("test.pcm").GetCloudFrame(0);
 
-            //return SimpleImporter.Instance.Load(filePath, maximumVertices);
 		}
 
 		public void Generate ()
