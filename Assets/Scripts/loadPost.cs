@@ -15,7 +15,6 @@ public class loadPost{
         if (postIndex < Feed_ref.Count)
         {
             object currentPost = Feed_ref.ElementAt(postIndex).Value;
-            currentPost.
         }
         else
             return;
