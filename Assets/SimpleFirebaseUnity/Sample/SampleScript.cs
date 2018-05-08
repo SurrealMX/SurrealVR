@@ -115,11 +115,12 @@ public class SampleScript : MonoBehaviour
 
 	IEnumerator Tests()
 	{
-		// Inits Firebase using Firebase Secret Key as Auth
-		// The current provided implementation not yet including Auth Token Generation
-		// If you're using this sample Firebase End, 
-		// there's a possibility that your request conflicts with other simple-firebase-c# user's request
-		Firebase firebase = Firebase.CreateNew ("simple-firebase-csharp.firebaseio.com", "UPaocwJVKvhnKL1orrf5XwWHMz3HUzckgCnGp6id");
+        // Inits Firebase using Firebase Secret Key as Auth
+        // The current provided implementation not yet including Auth Token Generation
+        // If you're using this sample Firebase End, 
+        // there's a possibility that your request conflicts with other simple-firebase-c# user's request
+        Firebase firebase = Firebase.CreateNew("surility.firebaseio.com", "cbzUEBoFQ0GulANiugnbrroxyqVgXEYPZ6yB5GU9");
+		//Firebase firebase = Firebase.CreateNew ("simple-firebase-csharp.firebaseio.com", "UPaocwJVKvhnKL1orrf5XwWHMz3HUzckgCnGp6id");
 
 		// Init callbacks
 		firebase.OnGetSuccess += GetOKHandler;
